@@ -46,7 +46,7 @@ func (m *Hub) Close() {
 	}
 }
 
-//ClientClose 关闭客户端
+//ClientClose 关闭并删除客户端
 func (m *Hub) ClientClose(id int64) {
 	m.clientclose <- id
 }
