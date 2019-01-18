@@ -2,6 +2,7 @@ package main
 
 import (
 	"EvaluationServer/mnet"
+	"log"
 	"sync"
 
 	"golang.org/x/net/websocket"
@@ -10,6 +11,22 @@ import (
 //从客户端读取消息
 func readFromClientConn(ws *websocket.Conn, wg *sync.WaitGroup, connid int64) {
 	defer wg.Done()
+
+	var pData []byte
+
+	for {
+		if err := websocket.Message.Receive(ws, &pData); err != nil {
+			return
+		}
+		log.Println(string(pData))
+	}
+}
+
+//客户端退出处理函数
+func delect(id int64) {
+	Hub.ClientClose(id)
+	log.Println(id, "已退出")
+	log.Println("hub: {", Hub.GetAll(), "}")
 }
 
 // ServerHandle 服务器处理函数
@@ -22,7 +39,10 @@ func ServerHandle(ws *websocket.Conn) {
 	Hub.Add(connid, ws)
 
 	//从集线器中删除该
-	defer Hub.ClientClose(connid)
+	defer delect(connid)
+
+	log.Println(connid, "连接到服务器")
+	log.Println("hub: {", Hub.GetAll(), "}")
 
 	//读取读取客户端消息
 	var wg sync.WaitGroup

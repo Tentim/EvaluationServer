@@ -27,7 +27,7 @@
           animation: snow linear infinite;
 }
 .snow.foreground {
-  background-image: url("https://dl6rt3mwcjzxg.cloudfront.net/assets/snow/snow-large-075d267ecbc42e3564c8ed43516dd557.png");
+  background-image: url("../images/snow-large-1.png");
   -webkit-animation-duration: 15s;
           animation-duration: 15s;
 }
@@ -36,7 +36,7 @@
           animation-delay: 7.5s;
 }
 .snow.middleground {
-  background-image: url(https://dl6rt3mwcjzxg.cloudfront.net/assets/snow/snow-medium-0b8a5e0732315b68e1f54185be7a1ad9.png);
+  background-image: url("../images/snow-medium-2.png");
   -webkit-animation-duration: 20s;
           animation-duration: 20s;
 }
@@ -45,7 +45,7 @@
           animation-delay: 10s;
 }
 .snow.background {
-  background-image: url(https://dl6rt3mwcjzxg.cloudfront.net/assets/snow/snow-small-1ecd03b1fce08c24e064ff8c0a72c519.png);
+  background-image: url("../images/snow-small-3.png");
   -webkit-animation-duration: 30s;
           animation-duration: 30s;
 }

@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <title>ITExamSystem</title>
+  <script src="assets/js/net.js"></script>
+  <script src="assets/js/validation.js"></script> <!-- 验证 -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="keywords" content="Internship Sign In & Sign Up Form Responsive Widget,Login form widgets, Sign up Web forms , Login signup Responsive web form,Flat Pricing table,Flat Drop downs,Registration Forms,News letter Forms,Elements" />
@@ -11,8 +13,10 @@
   <link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="all">
   <link href="assets/css/snow.css" rel="stylesheet" type="text/css" media="all" />
   <link href="assets/css/styles.css" rel="stylesheet" type="text/css" media="all" />
+
 </head>
 <body>
+
 <div class="snow-container">
   <div class="snow foreground"></div>
   <div class="snow foreground layered"></div>
@@ -21,24 +25,26 @@
   <div class="snow background"></div>
   <div class="snow background layered"></div>
 </div>
+
 <div class="top-buttons-agileinfo">
 </div>
 
 <div class="main-agileits">
   <!--form-stars-here-->
   <div class="form-w3-agile">
-    <h2 class="sub-agileits-w3layouts">登录</h2>
-    <form action="#" method="post">
-      <input type="email" name="Eamil" placeholder="用户" required="" />
-      <input type="password" name="Password" placeholder="密码" required="" />
+    <h2 class="sub-agileits-w3layouts">登录</h2> 
+    <form name="loginForm" action="#" method="post" onsubmit= "return login_validation()" >
+      <!--   <input type="text" name="Username" placeholder="用户" required="" />    -->
+      <input type="text" name="Username" placeholder="用户"  />
+      <input type="password" name="Password" placeholder="密码" />
       <a href="#" class="forgot-w3layouts">忘记密码 ?</a>
       <div class="submit-w3l">
         <input type="submit" value="登录">
       </div>
-      <p class="p-bottom-w3ls"><a href="signup.html">点击注册</a>如果你没有一个帐户。
-        .</p>
+      <p class="p-bottom-w3ls"><a href="signup.html">点击注册</a>如果你没有一个帐户。</p>
     </form>
-  </div>
+  </div>    
 </div>
+
 </body>
 </html>

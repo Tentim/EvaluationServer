@@ -8,12 +8,12 @@ if( "WebSocket" in window ){
     
     //设置连接事件
     ws.onopen = function(){
-        alert("OK WebSocket")
+        console.log("connect websocket success")
     }
 
     //设置断开连接事件
     ws.onclose = function(){
-        alert("Close WebSocket")
+        console.log("Close WebSocket")
     }
 
 }else{

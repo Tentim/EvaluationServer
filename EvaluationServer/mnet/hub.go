@@ -28,7 +28,7 @@ func (m *Hub) Del(id int64) {
 	delete(m.connectors, id)
 }
 
-//Get 获得客户端
+//Get 获得某一个客户端
 func (m *Hub) Get(id int64) *websocket.Conn {
 	m.rwlock.RLock()
 	defer m.rwlock.RUnlock()
@@ -36,6 +36,13 @@ func (m *Hub) Get(id int64) *websocket.Conn {
 		return conn
 	}
 	return nil
+}
+
+//GetAll 获得所有客户端
+func (m *Hub) GetAll() map[int64]*websocket.Conn {
+	m.rwlock.RLock()
+	defer m.rwlock.RUnlock()
+	return m.connectors
 }
 
 //Close self 关闭集线器
@@ -54,12 +61,13 @@ func (m *Hub) ClientClose(id int64) {
 //Server hub服务
 func (m *Hub) server() {
 	go func() {
-		select {
-		case <-m.exitC:
-			return
-		case id := <-m.clientclose:
-			m.connectors[id].Close()
-			m.Del(id)
+		for {
+			select {
+			case <-m.exitC:
+				return
+			case id := <-m.clientclose:
+				m.Del(id)
+			}
 		}
 	}()
 }

@@ -175,10 +175,10 @@ func IsUserByname(name string) bool {
 
 // IsPasswdTrueByUsername 通过用户名查询密码是否正确
 func IsPasswdTrueByUsername(name string, passwd string) bool {
-	var selpasswd string
-	err := DB.QueryRow("SELECT password FROM user WHERE username = ?", name).Scan(&selpasswd)
+	var slqpasswd string
+	err := DB.QueryRow("SELECT password FROM user WHERE username = ?", name).Scan(&slqpasswd)
 	if err != nil {
 		return false
 	}
-	return passwd == selpasswd
+	return passwd == slqpasswd
 }
