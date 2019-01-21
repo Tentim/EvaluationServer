@@ -4,8 +4,13 @@ function login_validation() {
     console.log("进行登录验证检测")
     var passwd = document.forms["loginForm"]["Password"].value;
     var name = document.forms["loginForm"]["Username"].value;
-    ws.send(name)
-    ws.send(passwd)
+    var msg = new proto.pb.user()
+    msg.setPassword(passwd)
+    msg.setUsername(name)
+
+    //序列化
+    var S = msg.serializeBinary()
+    ws.send(S)
     return false
 }
 
