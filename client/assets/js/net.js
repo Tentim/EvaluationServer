@@ -23,9 +23,10 @@ if( "WebSocket" in window ){
                     var loginmsg = servermsg.getLogin()
                     console.log(loginmsg.toObject())
                     if( loginmsg.getIstrue()){
-                        window.location.href = "http://127.0.0.1/03/";
-                        console.log("true")
-                    }
+                        window.location.href = "http://127.0.0.1/04/assets/html/answer.html";
+                    }else{
+                        alert("用户名或密码错误")
+                    }      
                 };break;
             }
         }
