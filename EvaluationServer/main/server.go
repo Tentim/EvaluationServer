@@ -2,6 +2,7 @@ package main
 
 import (
 	"EvaluationServer/mnet"
+	"EvaluationServer/msql"
 	"EvaluationServer/pb"
 	"log"
 	"sync"
@@ -9,6 +10,34 @@ import (
 	"github.com/golang/protobuf/proto"
 	"golang.org/x/net/websocket"
 )
+
+//登录处理函数 ClientOrder_CLIENORDER_LOGIN 0
+func login(ws *websocket.Conn, user *pb.User) {
+	log.Println("开始登录验证")
+
+	//密码验证
+	res := msql.IsPasswdTrueByUsername(user.GetUsername(), user.GetPassword())
+
+	//设置服务器消息
+	loginMsg := &pb.Login{}
+	loginMsg.Istrue = res
+	serverMsg := &pb.ServerMessage{}
+	serverMsg.Order = pb.ServerOrder_SERERORDER_LOGIN
+	serverMsg.Login = loginMsg
+
+	//序列化
+	pData, err := proto.Marshal(serverMsg)
+	if err != nil {
+		log.Println("序列化错误")
+	}
+
+	//发送数据
+	if err = websocket.Message.Send(ws, pData); err != nil {
+		log.Println("发送数据错误")
+	}
+
+	log.Println("验证完成：", res)
+}
 
 //从客户端读取消息
 func readFromClientConn(ws *websocket.Conn, wg *sync.WaitGroup, connid int64) {
@@ -20,15 +49,22 @@ func readFromClientConn(ws *websocket.Conn, wg *sync.WaitGroup, connid int64) {
 			return
 		}
 
+		log.Println("收到客户端消息")
+
 		//反序列化
-		var msg = &pb.User{}
-		if err := proto.Unmarshal(pData, msg); err != nil {
+		var clientMsg = &pb.ClientMessage{}
+		if err := proto.Unmarshal(pData, clientMsg); err != nil {
 			log.Println("反序列化错误")
 			return
 		}
 
-		log.Println(msg)
-
+		//处理客户端事件
+		switch clientMsg.GetOrder() {
+		case pb.ClientOrder_CLIENORDER_LOGIN:
+			{
+				login(ws, clientMsg.GetUser())
+			}
+		}
 	}
 }
 

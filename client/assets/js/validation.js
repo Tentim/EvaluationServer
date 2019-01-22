@@ -4,9 +4,13 @@ function login_validation() {
     console.log("进行登录验证检测")
     var passwd = document.forms["loginForm"]["Password"].value;
     var name = document.forms["loginForm"]["Username"].value;
-    var msg = new proto.pb.user()
-    msg.setPassword(passwd)
-    msg.setUsername(name)
+    var user = new proto.pb.User()
+    user.setPassword(passwd)
+    user.setUsername(name)
+    var msg = new proto.pb.ClientMessage()
+    msg.setOrder = proto.pb.ClientOrder.CLIENORDER_LOGIN
+    msg.setUser(user)
+    console.log(user.toObject())
 
     //序列化
     var S = msg.serializeBinary()
@@ -29,6 +33,8 @@ function admin_validation() {
 //进行检测
 function test() {
     console.log("检测")
+    //window.location.href = "http://www.baidu.com";
+    window.open("http://www.baidu.com");
 }
 
 

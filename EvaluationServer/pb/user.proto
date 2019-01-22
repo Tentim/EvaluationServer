@@ -2,7 +2,35 @@ syntax="proto3";
 
 package pb;
 
-message user{
+/* 服务器 */
+enum ServerOrder{//服务器指令
+    SERERORDER_LOGIN=0;//登录指令
+};
+
+message Login{
+    bool istrue=1;
+};
+
+//服务器协议
+message ServerMessage{
+    ServerOrder order=1;
+    Login login=2;
+};
+
+//------------------------------------------------------
+
+/* 客户端 */
+enum ClientOrder{//客户端指令
+    CLIENORDER_LOGIN=0; //登录指令
+};
+
+message User{//用户信息
     string username=1;
     string password=2;
+};
+
+//客户端协议
+message ClientMessage{
+    ClientOrder order=1;
+    User user=2;
 };
