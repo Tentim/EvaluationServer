@@ -11,6 +11,38 @@ import (
 	"golang.org/x/net/websocket"
 )
 
+//注册处理函数 ClientOrder_CLIENORDER_SIGNUP 1
+func signup(ws *websocket.Conn, user *pb.User) {
+	log.Println("开始注册")
+
+	//注册
+	var DU msql.UserData
+	DU.Username = user.GetUsername()
+	DU.Password = user.GetPassword()
+	log.Println(DU)
+	res := msql.InsertUser(DU)
+
+	//设置服务器消息
+	signupMsg := &pb.SIGNUP{}
+	signupMsg.Istrue = res
+	serverMsg := &pb.ServerMessage{}
+	serverMsg.Order = pb.ServerOrder_SERERORDER_SIGNUP
+	serverMsg.Signup = signupMsg
+
+	//序列化
+	pData, err := proto.Marshal(serverMsg)
+	if err != nil {
+		log.Println("序列化错误")
+	}
+
+	//发送数据
+	if err = websocket.Message.Send(ws, pData); err != nil {
+		log.Println("发送数据错误")
+	}
+
+	log.Println("注册完成：", res)
+}
+
 //登录处理函数 ClientOrder_CLIENORDER_LOGIN 0
 func login(ws *websocket.Conn, user *pb.User) {
 	log.Println("开始登录验证")
@@ -64,16 +96,13 @@ func readFromClientConn(ws *websocket.Conn, wg *sync.WaitGroup, connid int64) {
 			{
 				login(ws, clientMsg.GetUser())
 			}
-		}
-	}
-}
-
-//客户端退出处理函数
-func delect(id int64) {
-	Hub.ClientClose(id)
-	log.Println(id, "已退出")
-	log.Println("hub: {", Hub.GetAll(), "}")
-}
+		case pb.ClientOrder_CLIENORDER_SIGNUP:
+			{
+				signup(ws, clientMsg.GetUser())
+			}
+		} // end switch
+	} // end for
+} // end func
 
 // ServerHandle 服务器处理函数
 func ServerHandle(ws *websocket.Conn) {
@@ -82,13 +111,13 @@ func ServerHandle(ws *websocket.Conn) {
 	connid := mnet.CreateSessionID()
 
 	//添加到集线器
-	Hub.Add(connid, ws)
+	//Hub.Add(connid, ws)
 
 	//从集线器中删除该
-	defer delect(connid)
+	//defer Hub.ClientClose(connid)
 
-	log.Println(connid, "连接到服务器")
-	log.Println("hub: {", Hub.GetAll(), "}")
+	//log.Println(connid, "连接到服务器")
+	//log.Println("hub: {", Hub.GetAll(), "}")
 
 	//读取读取客户端消息
 	var wg sync.WaitGroup

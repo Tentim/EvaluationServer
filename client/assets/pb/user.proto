@@ -5,9 +5,14 @@ package pb;
 /* 服务器 */
 enum ServerOrder{//服务器指令
     SERERORDER_LOGIN=0;//登录指令
+    SERERORDER_SIGNUP=1;//注册指令
 };
 
 message Login{
+    bool istrue=1;
+};
+
+message SIGNUP{
     bool istrue=1;
 };
 
@@ -15,6 +20,7 @@ message Login{
 message ServerMessage{
     ServerOrder order=1;
     Login login=2;
+    SIGNUP signup=3;
 };
 
 //------------------------------------------------------
@@ -22,6 +28,7 @@ message ServerMessage{
 /* 客户端 */
 enum ClientOrder{//客户端指令
     CLIENORDER_LOGIN=0; //登录指令
+    CLIENORDER_SIGNUP=1;//注册指令
 };
 
 message User{//用户信息

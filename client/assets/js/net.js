@@ -18,15 +18,23 @@ if( "WebSocket" in window ){
         reader.readAsArrayBuffer(evt.data);//读取数据
         reader.onload = function (e) {
             servermsg = proto.pb.ServerMessage.deserializeBinary( reader.result ) //反序列化
+            console.log(servermsg.toObject())
             switch(servermsg.getOrder()){
                 case proto.pb.ServerOrder.SERERORDER_LOGIN:{
                     var loginmsg = servermsg.getLogin()
-                    console.log(loginmsg.toObject())
                     if( loginmsg.getIstrue()){
                         window.location.href = "http://127.0.0.1/04/assets/html/answer.html";
                     }else{
                         alert("用户名或密码错误")
-                    }      
+                    }
+                };break;
+                case proto.pb.ServerOrder.SERERORDER_SIGNUP:{
+                    var signup = servermsg.getSignup()
+                    if( signup.getIstrue()){
+                        window.location.href = "login.html";
+                    }else{
+                        alert("注册失败")
+                    } 
                 };break;
             }
         }

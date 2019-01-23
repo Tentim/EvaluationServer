@@ -4,6 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <title>注册</title>
+
+  <script src="../js/net.js"></script><!-- websocket -->
+  <script src="../pb/bundle.js"></script> <!-- pb文件 -->
+  <script src="../js/validation.js"></script> <!-- 验证 -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/jquery.growl.js"></script>
+  <link href="../css/jquery.growl.css" rel="stylesheet" type="text/css" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="keywords" content="Internship Sign In & Sign Up Form Responsive Widget,Login form widgets, Sign up Web forms , Login signup Responsive web form,Flat Pricing table,Flat Drop downs,Registration Forms,News letter Forms,Elements" />
@@ -23,16 +30,17 @@
   <div class="snow background"></div>
   <div class="snow background layered"></div>
 </div>
+
 <div class="top-buttons-agileinfo">
 </div>
 <div class="main-agileits">
   <!--form-stars-here-->
   <div class="form-w3-agile">
     <h2 class="sub-agileits-w3layouts">注册</h2>
-    <form name="signupForm" action="#" method="post" onsubmit="return signup_validation()">
+    <form name="signupForm" method="post" onsubmit="return signup_validation()">
       <input type="text" name="Username" placeholder="用户名" required="" />
       <input type="password" name="Password" placeholder="密码" required="" />
-      <input type="password" name="Password" placeholder="确认密码" required="" />
+      <input type="password" name="RepPassword" placeholder="确认密码" required="" onblur="signup_passwd_Rep()"/>
       <div class="submit-w3l">
         <input type="submit" value="注册">
       </div>
