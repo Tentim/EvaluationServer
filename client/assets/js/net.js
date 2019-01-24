@@ -23,7 +23,7 @@ if( "WebSocket" in window ){
                 case proto.pb.ServerOrder.SERERORDER_LOGIN:{
                     var loginmsg = servermsg.getLogin()
                     if( loginmsg.getIstrue()){
-                        window.location.href = "http://127.0.0.1/04/assets/html/answer.html";
+                        window.location.href = "http://127.0.0.1/04/assets/html/time.html";
                     }else{
                         alert("用户名或密码错误")
                     }
