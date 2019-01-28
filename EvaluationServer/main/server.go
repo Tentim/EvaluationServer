@@ -71,6 +71,26 @@ func login(ws *websocket.Conn, user *pb.User) {
 	log.Println("验证完成：", res)
 }
 
+func sendTime(ws *websocket.Conn) {
+	//准备协议
+	serverMsg := &pb.ServerMessage{}
+	serverMsg.Order = pb.ServerOrder_SERERORDER_SEND_WAITTIME
+	serverMsg.Time = waittime
+
+	//序列化
+	pData, err := proto.Marshal(serverMsg)
+	if err != nil {
+		log.Println("序列化错误")
+	}
+
+	//发送数据
+	if err = websocket.Message.Send(ws, pData); err != nil {
+		log.Println("发送数据错误")
+	}
+
+	log.Println("时间校准完成")
+}
+
 //从客户端读取消息
 func readFromClientConn(ws *websocket.Conn, wg *sync.WaitGroup, connid int64) {
 	defer wg.Done()
@@ -99,6 +119,10 @@ func readFromClientConn(ws *websocket.Conn, wg *sync.WaitGroup, connid int64) {
 		case pb.ClientOrder_CLIENORDER_SIGNUP:
 			{
 				signup(ws, clientMsg.GetUser())
+			}
+		case pb.ClientOrder_CLIENORDER_GET_WAITTIME:
+			{
+				sendTime(ws)
 			}
 		} // end switch
 	} // end for

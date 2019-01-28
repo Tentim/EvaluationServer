@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>等待开始</title>
 
+    <script src="../js/net.js"></script>
+    <script src="../pb/bundle.js"></script> <!-- pb文件 -->
     <script src="../js/sea/sea.js" id="seajsnode"></script>
     <script src="../js/sea/wait.js"></script>
 
@@ -13,11 +16,13 @@
     <script src="../js/jquery-2.1.4.min.js"></script>
     <script src="../js/countdown.js"></script>
 </head>
+
 <body>
-    <div class="wrapper" >
+    <div class="wrapper">
         <div class="cell">
             <div id="holder">
                 <div class="digits clearfix">
+            
                     <div class="digits-wrap">
                         <div id="cnt_0" class="cntDigit"></div>
                         <div id="cnt_1" class="cntDigit"></div>
@@ -27,16 +32,18 @@
                         <div id="cnt_3" class="cntDigit"></div>
                     </div>
                     <div class="digits-wrap">
-                        <div id="cnt_4" class="cntDigit"></div>
-                    </div>
+                            <div id="cnt_4" class="cntDigit"></div>
+                            <div id="cnt_5" class="cntDigit"></div>
+                        </div>        
                 </div>
             </div>
         </div>
     </div>
-    
+
     <script>
         myCountDown = countDown({});
     </script>
-    
-    </body>
-    </html>
+
+</body>
+
+</html>

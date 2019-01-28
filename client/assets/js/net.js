@@ -36,6 +36,12 @@ if( "WebSocket" in window ){
                         alert("注册失败")
                     } 
                 };break;
+                case proto.pb.ServerOrder.SERERORDER_SEND_WAITTIME:{
+                    var waittime = servermsg.getTime()
+                    console.log(waittime.toObject())
+                    setTimeCountDown(waittime.getHour(),waittime.getMinute(), waittime.getSecond())
+                    startCountDown()
+                };break;
             }
         }
     }
