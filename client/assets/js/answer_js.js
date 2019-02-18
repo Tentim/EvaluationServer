@@ -36,3 +36,4 @@ function return_test(){
     test.style.display='block';
     score.style.display='none';
 }
+
