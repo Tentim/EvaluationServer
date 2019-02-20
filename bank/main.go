@@ -21,23 +21,26 @@ func main() {
 	//关闭文件
 	defer file.Close()
 
+	//清空数据库
+	Empyt()
+
 	reader := bufio.NewReader(file) //带缓冲区的读写
 	for {
 		str, err := reader.ReadString('\n')
 		str = strings.TrimSpace(str)
-		//str, err := reader.ReadString('\n')
 		if err != nil {
-			fmt.Println("读取结束")
+			fmt.Println("题库已更新")
 			break
 		}
 		ques.Ques = str
 
 		str, err = reader.ReadString('\n')
-		//TODO
+		str = strings.TrimSpace(str)
+		ques.Ans = str
 
 		str, err = reader.ReadString('\n')
 		str = strings.TrimSpace(str)
-		ques.A = str[:]
+		ques.A = str
 
 		str, err = reader.ReadString('\n')
 		str = strings.TrimSpace(str)
@@ -53,7 +56,8 @@ func main() {
 
 		str, err = reader.ReadString('\n')
 
-		fmt.Println(ques)
+		//fmt.Println(ques)
 		InsertUser(ques)
 	}
+
 }

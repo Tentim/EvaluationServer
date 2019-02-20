@@ -41,6 +41,7 @@ const (
 // QuesData 用户数据类型
 type QuesData struct {
 	Quesid int
+	Ans    string
 	Ques   string
 	A      string
 	B      string
@@ -53,7 +54,6 @@ var DB *sql.DB
 
 //初始化
 func dbinit() {
-
 	//设置日志格式
 	log.SetFlags(log.LstdFlags | log.Llongfile | log.Lmicroseconds)
 
@@ -71,7 +71,7 @@ func dbinit() {
 
 	//验证连接
 	if err := DB.Ping(); err != nil {
-		log.Panicln("opon database fail")
+		log.Panicln("opon database fail", err)
 		return
 	}
 	log.Println("database connnect success")
@@ -88,14 +88,14 @@ func InsertUser(ques QuesData) bool {
 	}
 
 	//准备sql语句
-	stmt, err := tx.Prepare("INSERT INTO question (`question`, `answer_A`, `answer_B`, `answer_C`, `answer_D`) VALUES (?, ?, ?, ?, ?)")
+	stmt, err := tx.Prepare("INSERT INTO question (`answer`, `question`, `answer_A`, `answer_B`, `answer_C`, `answer_D`) VALUES (?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		log.Println("Prepare fail", err)
 		return false
 	}
 
 	//将参数传递到sql语句中并且执
-	if _, err := stmt.Exec(ques.Ques, ques.A, ques.B, ques.C, ques.D); err != nil {
+	if _, err := stmt.Exec(ques.Ans, ques.Ques, ques.A, ques.B, ques.C, ques.D); err != nil {
 		log.Println("Exec fail", err)
 		return false
 	}
@@ -105,5 +105,35 @@ func InsertUser(ques QuesData) bool {
 
 	//获得上一个插入自增的id
 	//log.Println(res.LastInsertId())
+	return true
+}
+
+//Empyt 清空数据库
+func Empyt() bool {
+
+	//开启事务
+	tx, err := DB.Begin()
+	if err != nil {
+		log.Println("tx fail", err)
+		return false
+	}
+
+	//准备sql语句
+	stmt, err := tx.Prepare("truncate table question")
+	if err != nil {
+		log.Println("Prepare fail", err)
+		return false
+	}
+
+	//将参数传递到sql语句中并且执行
+	if _, err := stmt.Exec(); err != nil {
+		log.Println("Exec fail", err)
+		return false
+	}
+
+	//将事务提交
+	tx.Commit()
+
+	log.Println("数据表已清空")
 	return true
 }
