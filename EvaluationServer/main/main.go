@@ -1,6 +1,7 @@
 package main
 
 import (
+	"EvaluationServer/bank"
 	"EvaluationServer/mnet"
 	"log"
 	"net/http"
@@ -26,12 +27,15 @@ func main() {
 	//打印日志
 	log.Println("服务器启动成功！")
 
-	setTime(2, 0, 0)
+	//设置时间
+	setTime(0, 1, 0)
 	go timeStart()
+
+	//初始化更新题库
+	go bank.UpDataQues()
 
 	//监听端口
 	if err := http.ListenAndServe(":4545", nil); err != nil {
 		panic("ListenAndServe: " + err.Error())
 	}
-
 }

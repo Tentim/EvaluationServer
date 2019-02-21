@@ -9,7 +9,6 @@ create table user(
 
 
 UPDATE user set password='132456' WHERE username='iii';
-
 */
 
 package msql
@@ -31,6 +30,12 @@ const (
 	port     = "3306"
 	dbName   = "evaluation"
 )
+
+/*
+ ******************************
+ *******  用户数据表 ***********
+ ******************************
+ */
 
 // UserData 用户数据类型
 type UserData struct {
@@ -181,4 +186,93 @@ func IsPasswdTrueByUsername(name string, passwd string) bool {
 		return false
 	}
 	return passwd == slqpasswd
+}
+
+/*
+ ******************************
+ *******  题库数据表 ***********
+ ******************************
+ */
+
+// QuesData 用户数据类型
+type QuesData struct {
+	Quesid int
+	Ans    string
+	Ques   string
+	A      string
+	B      string
+	C      string
+	D      string
+}
+
+// InsertQues 插入数据
+func InsertQues(ques QuesData) bool {
+
+	//开启事务
+	tx, err := DB.Begin()
+	if err != nil {
+		log.Println("tx fail")
+		return false
+	}
+
+	//准备sql语句
+	stmt, err := tx.Prepare("INSERT INTO question (`answer`, `question`, `answer_A`, `answer_B`, `answer_C`, `answer_D`) VALUES (?, ?, ?, ?, ?, ?)")
+	if err != nil {
+		log.Println("Prepare fail", err)
+		return false
+	}
+
+	//将参数传递到sql语句中并且执行
+	if _, err := stmt.Exec(ques.Ans, ques.Ques, ques.A, ques.B, ques.C, ques.D); err != nil {
+		log.Println("Exec fail", err)
+		return false
+	}
+
+	//将事务提交
+	tx.Commit()
+
+	//获得上一个插入自增的id
+	//log.Println(res.LastInsertId())
+	return true
+}
+
+//Empyt 清空数据库
+func Empyt() bool {
+
+	//开启事务
+	tx, err := DB.Begin()
+	if err != nil {
+		log.Println("tx fail", err)
+		return false
+	}
+
+	//准备sql语句
+	stmt, err := tx.Prepare("truncate table question")
+	if err != nil {
+		log.Println("Prepare fail", err)
+		return false
+	}
+
+	//将参数传递到sql语句中并且执行
+	if _, err := stmt.Exec(); err != nil {
+		log.Println("Exec fail", err)
+		return false
+	}
+
+	//将事务提交
+	tx.Commit()
+
+	log.Println("数据表已清空")
+	return true
+}
+
+//GetQuesByID 通过id获取题目
+func GetQuesByID(id int) (QuesData, bool) {
+	var Ques QuesData
+	err := DB.QueryRow("SELECT * FROM question WHERE question_id = ?", id).Scan(&Ques.Quesid, &Ques.Ans, &Ques.Ques, &Ques.A, &Ques.B, &Ques.C, &Ques.D)
+	if err != nil {
+		log.Println(id, "题目ID有误")
+		return Ques, false
+	}
+	return Ques, true
 }

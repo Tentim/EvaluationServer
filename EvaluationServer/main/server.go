@@ -1,6 +1,7 @@
 package main
 
 import (
+	"EvaluationServer/bank"
 	"EvaluationServer/mnet"
 	"EvaluationServer/msql"
 	"EvaluationServer/pb"
@@ -89,6 +90,17 @@ func sendTime(ws *websocket.Conn) {
 	}
 
 	log.Println("时间校准完成")
+
+	go func() {
+		nums := bank.GenerateRandomNumber(1, 30, 10)
+		for _, v := range nums {
+			if ques, ok := msql.GetQuesByID(v); ok {
+				log.Println(v, ":", ques)
+			} else {
+				log.Println("题库读取出错")
+			}
+		}
+	}()
 }
 
 //从客户端读取消息
