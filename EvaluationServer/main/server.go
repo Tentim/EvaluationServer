@@ -1,7 +1,6 @@
 package main
 
 import (
-	"EvaluationServer/bank"
 	"EvaluationServer/mnet"
 	"EvaluationServer/msql"
 	"EvaluationServer/pb"
@@ -11,6 +10,12 @@ import (
 	"github.com/golang/protobuf/proto"
 	"golang.org/x/net/websocket"
 )
+
+//QIDs 题目id集合
+var QIDs []int
+
+//QCount 题目总量集合
+var QCount int32 = 10
 
 //注册处理函数 ClientOrder_CLIENORDER_SIGNUP 1
 func signup(ws *websocket.Conn, user *pb.User) {
@@ -74,9 +79,12 @@ func login(ws *websocket.Conn, user *pb.User) {
 
 func sendTime(ws *websocket.Conn) {
 	//准备协议
+	wait := &pb.WAITTIME{}
+	wait.Start = waiting
+	wait.Time = waittime
 	serverMsg := &pb.ServerMessage{}
 	serverMsg.Order = pb.ServerOrder_SERERORDER_SEND_WAITTIME
-	serverMsg.Time = waittime
+	serverMsg.Wait = wait
 
 	//序列化
 	pData, err := proto.Marshal(serverMsg)
@@ -90,17 +98,47 @@ func sendTime(ws *websocket.Conn) {
 	}
 
 	log.Println("时间校准完成")
+}
 
-	go func() {
-		nums := bank.GenerateRandomNumber(1, 30, 10)
-		for _, v := range nums {
-			if ques, ok := msql.GetQuesByID(v); ok {
-				log.Println(v, ":", ques)
-			} else {
-				log.Println("题库读取出错")
-			}
+func sendQuestion(ws *websocket.Conn) {
+
+	quess := &pb.QUESTION{}
+	quess.Num = QCount
+	quess.Ques = make([]*pb.Question, QCount)
+
+	for i, v := range QIDs {
+		if q, ok := msql.GetQuesByID(v); ok {
+			ques := &pb.Question{}
+			ques.QuestionId = q.Quesid
+			ques.Answer = q.Ans
+			ques.Question = q.Ques
+			ques.A = q.A
+			ques.B = q.B
+			ques.C = q.C
+			ques.D = q.D
+			log.Println(v, ":", q)
+			quess.Ques[i] = ques
+		} else {
+			log.Println("题库读取出错")
 		}
-	}()
+	}
+
+	serverMsg := &pb.ServerMessage{}
+	serverMsg.Order = pb.ServerOrder_SERERORDER_SEND_QUESTION
+	serverMsg.Quess = quess
+
+	//序列化
+	pData, err := proto.Marshal(serverMsg)
+	if err != nil {
+		log.Println("序列化错误")
+	}
+
+	//发送数据
+	if err = websocket.Message.Send(ws, pData); err != nil {
+		log.Println("发送数据错误")
+	}
+
+	log.Println("题目已发送")
 }
 
 //从客户端读取消息
@@ -136,6 +174,10 @@ func readFromClientConn(ws *websocket.Conn, wg *sync.WaitGroup, connid int64) {
 			{
 				sendTime(ws)
 			}
+		case pb.ClientOrder_CLIENORDER_GET_QUESTION:
+			{
+				sendQuestion(ws)
+			}
 		} // end switch
 	} // end for
 } // end func
@@ -163,4 +205,11 @@ func ServerHandle(ws *websocket.Conn) {
 	}
 
 	wg.Wait()
+}
+
+// AnswerServerHandle 答题服务器处理函数
+func AnswerServerHandle(ws *websocket.Conn) {
+
+	//读取读取客户端消息
+	log.Println("已连接", ws)
 }

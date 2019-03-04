@@ -1,7 +1,9 @@
 
-    //$.growl.error({title: "错误标题", message: "错误消息内容!" });
-    //$.growl.notice({title: "提醒标题", message: "提醒消息内容!" });
-    //$.growl.warning({title: "警告标题", message: "警告消息内容!" });
+//  ----------------  验证
+
+//$.growl.error({title: "错误标题", message: "错误消息内容!" });
+//$.growl.notice({title: "提醒标题", message: "提醒消息内容!" });
+//$.growl.warning({title: "警告标题", message: "警告消息内容!" });
 
     
 //登录验证
@@ -61,6 +63,7 @@ function signup_passwd_Rep() {
 function admin_validation() {
     var passwd = document.forms["adminForm"]["Password"].value;
     var name = document.forms["adminForm"]["Username"].value;
+    console.log(passwd, reppasswd)
 }
 
 //进行检测

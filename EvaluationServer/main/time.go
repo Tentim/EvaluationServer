@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+//Waiting 是否开始等待
+var waiting = false
 var waittime = &pb.Time{}
 
 //设置时间
@@ -27,8 +29,9 @@ func changeFrom(time int32) {
 	waittime.Hour = time / 3600
 }
 
-//开始倒计时
+//开始等待倒计时
 func timeStart() {
+	waiting = true
 	ticker := time.NewTicker(1 * time.Second)
 	for range ticker.C {
 		time := changeToS(waittime)

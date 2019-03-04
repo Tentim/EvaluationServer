@@ -8,11 +8,22 @@ message Time{
     int32 second = 3; //秒
 };
 
+message Question{ 
+    int32 question_id = 1;
+    string answer = 2;
+    string question = 3;
+    string A = 4;
+    string B = 5;
+    string C = 6;
+    string D = 7;
+};
+
 /* 服务器 */
 enum ServerOrder{ // 服务器指令
     SERERORDER_LOGIN  = 0; // 登录指令
     SERERORDER_SIGNUP = 1; // 注册指令
     SERERORDER_SEND_WAITTIME = 2;// 发送等待时间
+    SERERORDER_SEND_QUESTION = 3;// 发送题目
 };
 
 message Login{
@@ -23,12 +34,23 @@ message SIGNUP{
     bool istrue = 1;
 };
 
+message WAITTIME{
+    bool start = 1;
+    Time time = 2;
+};
+
+message QUESTION{
+    int32 num = 1;
+    repeated Question ques = 2;
+}
+
 //服务器协议
 message ServerMessage{
     ServerOrder order = 1;
     Login login = 2;
     SIGNUP signup = 3;
-    Time time = 4;
+    WAITTIME wait = 4;
+    QUESTION quess = 5;
 };
 
 //------------------------------------------------------
@@ -38,6 +60,7 @@ enum ClientOrder{ // 客户端指令
     CLIENORDER_LOGIN = 0; // 登录指令
     CLIENORDER_SIGNUP = 1;// 注册指令
     CLIENORDER_GET_WAITTIME = 2;// 获取等待时间
+    CLIENORDER_GET_QUESTION = 3;// 获取题目信息
 };
 
 message User{//用户信息

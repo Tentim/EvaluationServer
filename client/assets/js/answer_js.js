@@ -1,7 +1,8 @@
+
 /**
+ * 答题
  * Created by pjj on 2017/2/4.
  */
-
 window.onload=function clear_all(){
     var a = document.getElementsByTagName("input");
     for(var i = 0;i < a.length;i++){
@@ -36,4 +37,19 @@ function return_test(){
     test.style.display='block';
     score.style.display='none';
 }
+
+$(function () {
+    //发送获取题库指令
+    var msg = new proto.pb.ClientMessage()
+    msg.setOrder(proto.pb.ClientOrder.CLIENORDER_GET_QUESTION)
+
+    //序列化
+    var S = msg.serializeBinary()
+    if(ws.readyState == 1){
+        ws.send(S)
+    }
+    else{
+        ws.onopen = function(){ws.send(S)} 
+    }
+})
 

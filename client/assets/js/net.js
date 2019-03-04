@@ -23,7 +23,8 @@ if( "WebSocket" in window ){
                 case proto.pb.ServerOrder.SERERORDER_LOGIN:{
                     var loginmsg = servermsg.getLogin()
                     if( loginmsg.getIstrue()){
-                        window.location.href = "http://127.0.0.1/Eva/assets/html/time.html";
+                        //window.location.href = "http://127.0.0.1/Eva/assets/html/time.html";
+                        window.location.href = "time.html";
                     }else{
                         alert("用户名或密码错误")
                     }
@@ -37,10 +38,29 @@ if( "WebSocket" in window ){
                     } 
                 };break;
                 case proto.pb.ServerOrder.SERERORDER_SEND_WAITTIME:{
-                    var waittime = servermsg.getTime()
+                    var wait = servermsg.getWait()
+                    var start = wait.getStart()
+                    var waittime = wait.getTime()
                     console.log(waittime.toObject())
+                    console.log(start)
                     setTimeCountDown(waittime.getHour(),waittime.getMinute(), waittime.getSecond())
-                    startCountDown()
+                    if(start){
+                        startCountDown()
+                    }
+                };break;
+                case proto.pb.ServerOrder.SERERORDER_SEND_QUESTION:{
+                    console.log("更新题库")
+                    var quess = servermsg.getQuess()
+                    var qcoust = quess.getNum()
+                    var ques = quess.getQuesList()
+                    for(i=0; i<qcoust; i++){
+                        console.log(i)
+                        var tpl = template(document.getElementById('tpl').innerHTML);
+                        var html = tpl({N:i, Q: ques[i].getQuestion(), A: ques[i].getA(), B: ques[i].getB(), C: ques[i].getC(), D: ques[i].getD()});
+                        var T = document.createElement("div")
+                        T.innerHTML = html
+                        document.getElementById('ques').appendChild(T);
+                    }
                 };break;
             }
         }

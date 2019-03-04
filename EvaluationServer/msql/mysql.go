@@ -196,7 +196,7 @@ func IsPasswdTrueByUsername(name string, passwd string) bool {
 
 // QuesData 用户数据类型
 type QuesData struct {
-	Quesid int
+	Quesid int32
 	Ans    string
 	Ques   string
 	A      string
@@ -276,3 +276,5 @@ func GetQuesByID(id int) (QuesData, bool) {
 	}
 	return Ques, true
 }
+
+//

@@ -67,9 +67,9 @@ func UpDataQues() {
 }
 
 //GenerateRandomNumber 生成count个[start,end)结束的不重复的随机数
-func GenerateRandomNumber(start int, end int, count int) []int {
+func GenerateRandomNumber(start int, end int, count int32) []int {
 	//范围检查
-	if end < start || (end-start) < count {
+	if end < start || (end-start) < int(count) {
 		return nil
 	}
 
@@ -78,7 +78,7 @@ func GenerateRandomNumber(start int, end int, count int) []int {
 
 	//随机数生成器，加入时间戳保证每次生成的随机数不一样
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	for len(nums) < count {
+	for len(nums) < int(count) {
 		//生成随机数
 		num := r.Intn((end - start)) + start
 
@@ -90,7 +90,6 @@ func GenerateRandomNumber(start int, end int, count int) []int {
 				break
 			}
 		}
-
 		if !exist {
 			nums = append(nums, num)
 		}

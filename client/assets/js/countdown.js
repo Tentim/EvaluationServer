@@ -110,6 +110,7 @@ $(function(){
 */
 
 $(function () {
+    //发送获取等待时间指令
     var msg = new proto.pb.ClientMessage()
     msg.setOrder(proto.pb.ClientOrder.CLIENORDER_GET_WAITTIME)
 
@@ -121,6 +122,5 @@ $(function () {
     else{
         ws.onopen = function(){ws.send(S)} 
     }
-    
 })
 
